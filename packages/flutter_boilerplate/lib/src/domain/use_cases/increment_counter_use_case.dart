@@ -1,12 +1,12 @@
-import '../../data/repositories/repositories.dart';
 import '../models/models.dart';
+import '../repositories/repositories.dart';
 import 'use_case.dart';
 
 class IncrementCounterUseCase
     implements UseCase<Future<CounterModel>, CounterModel> {
   IncrementCounterUseCase({required this.counterRepository});
 
-  final CounterRepositoryLocal counterRepository;
+  final CounterRepository counterRepository;
 
   @override
   Future<CounterModel> call(CounterModel counter) async {
