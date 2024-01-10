@@ -9,6 +9,8 @@ class CounterRepositoryLocal implements CounterRepository {
   static final CounterRepositoryLocal instance =
       CounterRepositoryLocal._instantiate();
 
+  CounterModel counterModel = const CounterModel();
+
   @override
   Future<CounterModel> fetch() async {
     return counterModel;
@@ -20,7 +22,7 @@ class CounterRepositoryLocal implements CounterRepository {
   }
 
   @override
-  Future<void> update(CounterModel counter) async {}
-
-  static const CounterModel counterModel = CounterModel();
+  Future<void> update(CounterModel counter) async {
+    counterModel = counter;
+  }
 }
