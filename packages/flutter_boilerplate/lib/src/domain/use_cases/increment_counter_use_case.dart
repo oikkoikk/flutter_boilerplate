@@ -1,15 +1,19 @@
 import '../../data/repositories/repositories.dart';
-import '../models/counter_model.dart';
+import '../models/models.dart';
+import 'use_case.dart';
 
-class IncrementCounterUseCase {
-  IncrementCounterUseCase(this.counterRepository);
+class IncrementCounterUseCase
+    implements UseCase<Future<CounterModel>, CounterModel> {
+  IncrementCounterUseCase({required this.counterRepository});
 
   final CounterRepositoryLocal counterRepository;
 
-  Future<CounterModel> call() async {
-    final CounterModel counter = await counterRepository.fetch();
-    final CounterModel newCounter = CounterModel(value: counter.value + 1);
-    await counterRepository.update(newCounter);
-    return newCounter;
+  @override
+  Future<CounterModel> call(CounterModel counter) async {
+    final CounterModel updatedCounter = counter.copyWith(
+      value: counter.value + 1,
+    );
+    await counterRepository.update(updatedCounter);
+    return updatedCounter;
   }
 }

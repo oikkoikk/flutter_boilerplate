@@ -1,44 +1,63 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:functional_widget_annotation/functional_widget_annotation.dart';
+import 'home_page_presenter.dart';
+import 'home_page_view_model.dart';
 
-import '../../../domain/use_cases/use_cases.dart';
+part 'home_page_view_mobile.g.dart';
 
-class HomePageViewMobile extends StatefulWidget {
+class HomePageViewMobile extends StatelessWidget {
   const HomePageViewMobile({super.key, required this.title});
 
   final String title;
-
-  @override
-  State<HomePageViewMobile> createState() => _HomePageViewMobileState();
-}
-
-class _HomePageViewMobileState extends State<HomePageViewMobile> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: Text(title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              ,
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: IncrementCounterUseCase().call,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+      body: const BuildBody(),
+      floatingActionButton: const BuildFloatingActionButton(),
     );
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('title', title));
+  }
+}
+
+@cwidget
+Widget buildBody(BuildContext context, WidgetRef ref) {
+  return Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        const Text(
+          'You have pushed the button this many times:',
+        ),
+        Text(
+          ref.watch(homePagePresenterProvider).counter.value.toString(),
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+      ],
+    ),
+  );
+}
+
+@cwidget
+Widget buildFloatingActionButton(WidgetRef ref) {
+  final HomePageViewModel viewModel = ref.watch(homePagePresenterProvider);
+
+  return FloatingActionButton(
+    onPressed: () async => ref
+        .read(homePagePresenterProvider.notifier)
+        .incrementCounter(viewModel),
+    tooltip: 'Increment',
+    child: const Icon(Icons.add),
+  );
 }
