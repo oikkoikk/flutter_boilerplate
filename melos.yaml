@@ -1,0 +1,33 @@
+name: flutter_boilerplate
+
+packages:
+  - packages/*
+
+command:
+  version:
+    includeCommitId: true
+
+scripts:
+  lint:all:
+    run: |
+      flutter pub run melos run lint:analyze && \
+      flutter pub run melos run lint:format
+    description: Run all static analysis checks.
+  lint:analyze:
+    run: |
+      flutter pub run melos exec -- \
+      flutter analyze . --fatal-infos
+    description: |
+      Run `flutter analyze` for all packages.
+  lint:format:
+    run: |
+      flutter pub run melos exec -- \
+      dart format . --output=none --set-exit-if-changed
+    description: |
+      Run `dart format` for all packages.
+  build_runner:watch:
+    run: |
+      flutter pub run melos exec -- \
+      flutter pub run build_runner watch --delete-conflicting-outputs
+    description: |
+      Run `flutter pub run build_runner watch` for all packages.
